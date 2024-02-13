@@ -58,6 +58,7 @@ class CloseableTabWidget(QTabWidget):
     def emit_tab_close_request(self, index):
         self.tabCloseRequestedCustom.emit(index)\
 
+
     def handle_url_change(self, url, url_bar):
         if not self.user_made_change:
             url_bar.setCursorPosition(0)
@@ -76,6 +77,7 @@ class CloseableTabWidget(QTabWidget):
                 url = f"https://www.google.com/search?q={'+'.join(search_query.split())}"
                 web_engine_page.load(QUrl(url))
             url_bar.setCursorPosition(0)
+
 
 class BrowserWindow(QMainWindow):
     def __init__(self):

@@ -63,6 +63,7 @@ class CloseableTabWidget(QTabWidget):
         url_bar.setText(url.toString())
         url_bar.setCursorPosition(0)
         self.user_made_change = False
+        url_bar.setCursorPosition(0)
 
     def handle_search(self, url_bar, web_engine_page):
         text = url_bar.text()
@@ -75,7 +76,7 @@ class CloseableTabWidget(QTabWidget):
                 search_query = text.strip()
                 url = f"https://www.google.com/search?q={'+'.join(search_query.split())}"
                 web_engine_page.load(QUrl(url))
-            url_bar.setCursorPosition(0)
+            # url_bar.setCursorPosition(0)
 
 
 class BrowserWindow(QMainWindow):

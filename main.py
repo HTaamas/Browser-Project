@@ -61,8 +61,8 @@ class CloseableTabWidget(QTabWidget):
 
     def handle_url_change(self, url, url_bar):
         url_bar.setText(url.toString())
-        self.user_made_change = False
         url_bar.setCursorPosition(0)
+        self.user_made_change = False
 
     def handle_search(self, url_bar, web_engine_page):
         text = url_bar.text()

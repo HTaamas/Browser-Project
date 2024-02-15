@@ -18,6 +18,7 @@ from PyQt5.QtWidgets import (
     QMainWindow,
 )
 
+
 class DownloadHistoryListWidget(QListWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -53,6 +54,7 @@ class DownloadHistoryListWidget(QListWidget):
                             self.browser_window.download_history.remove(item_text)
                             self.browser_window.save_download_history()  # Save the download history
                             self.takeItem(row)  # Remove the item from the list
+
 
 class DownloadHistoryWindow(QMainWindow):
     def __init__(self, download_history, browser_window):
@@ -118,6 +120,7 @@ class HistoryListWidget(QListWidget):
                     self.browser_window.history.remove(item_text)
                     self.browser_window.browser_window.save_history()
 
+
 class HistoryWindow(QMainWindow):
     def __init__(self, history, browser_window):
         super().__init__()
@@ -155,6 +158,7 @@ class HistoryWindow(QMainWindow):
         self.list_widget.clear()
         self.history.clear()
         self.browser_window.save_history()
+
 
 class CloseableTabWidget(QTabWidget):
     tabCloseRequestedCustom = pyqtSignal(int)
@@ -252,6 +256,7 @@ class CloseableTabWidget(QTabWidget):
                 url = f"https://www.google.com/search?q={'+'.join(search_query.split())}"
                 web_engine_page.load(QUrl(url))
             # url_bar.setCursorPosition(0)
+
 
 class BrowserWindow(QMainWindow):
     def __init__(self):

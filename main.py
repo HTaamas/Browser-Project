@@ -1,6 +1,7 @@
 import json
 import os
 from urllib.parse import urlparse
+import subprocess
 
 from PyQt5.QtCore import QUrl, pyqtSignal, Qt
 from PyQt5.QtGui import QCursor, QFont
@@ -26,6 +27,8 @@ class DownloadHistoryListWidget(QListWidget):
 
     def contextMenuEvent(self, event):
         menu = QMenu(self)
+        open_file_action = menu.addAction("Open file")  # New action
+        open_file_location_action = menu.addAction("Open files location")  # New action
         delete_action = menu.addAction("Delete")
         delete_file_action = menu.addAction("Delete File")  # New action
         action = menu.exec_(self.mapToGlobal(event.pos()))
@@ -54,7 +57,14 @@ class DownloadHistoryListWidget(QListWidget):
                             self.browser_window.download_history.remove(item_text)
                             self.browser_window.save_download_history()  # Save the download history
                             self.takeItem(row)  # Remove the item from the list
-
+            elif action == open_file_location_action:  # New condition
+                item_text = item_text[2:] if item_text.startswith('X ') else item_text
+                if os.path.exists(item_text):
+                    subprocess.Popen(f'explorer /select,"{os.path.abspath(item_text)}"')  # Open file location and select the file  # Open file location
+            elif action == open_file_action:  # New condition
+                item_text = item_text[2:] if item_text.startswith('X ') else item_text
+                if os.path.exists(item_text):
+                    os.startfile(item_text)  # Open the file
 
 class DownloadHistoryWindow(QMainWindow):
     def __init__(self, download_history, browser_window):

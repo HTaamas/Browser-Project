@@ -320,25 +320,27 @@ class BrowserWindow(QMainWindow):
         event.accept()
 
     def save_history(self):
+        # Create directory if it doesn't exist
+        os.makedirs('appdata/htaamas/browser', exist_ok=True)
+
         # Save browsing history to a file
-        with open('history.json', 'w') as f:
+        with open('appdata/htaamas/browser/history.json', 'w') as f:
             json.dump(self.history, f)
 
-        # Save download history to a file
-        with open('download_history.json', 'w') as f:
-            json.dump(self.download_history, f)
-
     def load_history(self):
+        # Create directory if it doesn't exist
+        os.makedirs('appdata/htaamas/browser', exist_ok=True)
+
         # Load browsing history from a file
         try:
-            with open('history.json', 'r') as f:
+            with open('appdata/htaamas/browser/history.json', 'r') as f:
                 self.history = json.load(f)
         except FileNotFoundError:
             self.history = []
 
         # Load download history from a file
         try:
-            with open('download_history.json', 'r') as f:
+            with open('appdata/htaamas/browser/download_history.json', 'r') as f:
                 self.download_history = json.load(f)
         except FileNotFoundError:
             self.download_history = []
@@ -352,8 +354,11 @@ class BrowserWindow(QMainWindow):
         self.history_window.show()
 
     def save_download_history(self):
+        # Create directory if it doesn't exist
+        os.makedirs('appdata/htaamas/browser', exist_ok=True)
+
         # Save download history to a file
-        with open('download_history.json', 'w') as f:
+        with open('appdata/htaamas/browser/download_history.json', 'w') as f:
             json.dump(self.download_history, f)
 
     def open_history_window(self):

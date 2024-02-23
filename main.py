@@ -44,7 +44,7 @@ class DownloadHistoryListWidget(QListWidget):
                 item_text = item_text[2:] if item_text.startswith('X ') else item_text
                 if item_text in self.browser_window.download_history:
                     self.browser_window.download_history.remove(item_text)
-                    self.browser_window.save_download_history()  # Save the download history
+                    self.browser_window.browser_window.save_download_history()  # Save the download history
             elif action == delete_file_action:  # New condition
                 reply = QMessageBox.question(self, 'Delete Confirmation',
                                              "Are you sure you want to delete the file?",
@@ -107,10 +107,6 @@ class DownloadHistoryWindow(QMainWindow):
         self.list_widget.clear()
         self.download_history.clear()
         self.browser_window.save_download_history()
-
-    def save_download_history(self):
-        with open('download_history.json', 'w') as f:
-            json.dump(self.download_history, f)
 
 
 class HistoryListWidget(QListWidget):

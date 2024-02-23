@@ -2,11 +2,12 @@ import json
 import os
 from urllib.parse import urlparse
 import subprocess
+import warnings
 
 from PyQt5.QtCore import QUrl, pyqtSignal, Qt
-from PyQt5.QtGui import QCursor, QFont
+from PyQt5.QtGui import QCursor, QFont, QIcon
 from PyQt5.QtWebEngineWidgets import QWebEngineProfile
-from PyQt5.QtWidgets import QFileDialog, QMenu, QAction, QMenuBar, QTabBar, QListWidget, QLabel, QMessageBox
+from PyQt5.QtWidgets import QFileDialog, QMenu, QAction, QTabBar, QListWidget, QLabel, QMessageBox
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
 from PyQt5.QtWidgets import (
     QApplication,
@@ -19,6 +20,7 @@ from PyQt5.QtWidgets import (
     QMainWindow,
 )
 
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 class DownloadHistoryListWidget(QListWidget):
     def __init__(self, parent=None):
@@ -274,6 +276,7 @@ class BrowserWindow(QMainWindow):
         self.setWindowTitle("My Web Browser")
         self.setGeometry(100, 100, 800, 600)
         self.setStyleSheet("background-color: #222; color: #eee;")
+        self.setWindowIcon(QIcon('icon.png'))
         self.main_widget = QWidget()
         self.setCentralWidget(self.main_widget)
         self.main_layout = QVBoxLayout(self.main_widget)
@@ -321,26 +324,28 @@ class BrowserWindow(QMainWindow):
 
     def save_history(self):
         # Create directory if it doesn't exist
-        os.makedirs('appdata/htaamas/browser', exist_ok=True)
+        directory = os.path.expanduser('~\\AppData\\Roaming\\htaamas\\browser')
+        os.makedirs(directory, exist_ok=True)
 
         # Save browsing history to a file
-        with open('appdata/htaamas/browser/history.json', 'w') as f:
+        with open(os.path.join(directory, 'history.json'), 'w') as f:
             json.dump(self.history, f)
 
     def load_history(self):
         # Create directory if it doesn't exist
-        os.makedirs('appdata/htaamas/browser', exist_ok=True)
+        directory = os.path.expanduser('~\\AppData\\Roaming\\htaamas\\browser')
+        os.makedirs(directory, exist_ok=True)
 
         # Load browsing history from a file
         try:
-            with open('appdata/htaamas/browser/history.json', 'r') as f:
+            with open(os.path.join(directory, 'history.json'), 'r') as f:
                 self.history = json.load(f)
         except FileNotFoundError:
             self.history = []
 
         # Load download history from a file
         try:
-            with open('appdata/htaamas/browser/download_history.json', 'r') as f:
+            with open(os.path.join(directory, 'download_history.json'), 'r') as f:
                 self.download_history = json.load(f)
         except FileNotFoundError:
             self.download_history = []
@@ -355,10 +360,11 @@ class BrowserWindow(QMainWindow):
 
     def save_download_history(self):
         # Create directory if it doesn't exist
-        os.makedirs('appdata/htaamas/browser', exist_ok=True)
+        directory = os.path.expanduser('~\\AppData\\Roaming\\htaamas\\browser')
+        os.makedirs(directory, exist_ok=True)
 
         # Save download history to a file
-        with open('appdata/htaamas/browser/download_history.json', 'w') as f:
+        with open(os.path.join(directory, 'download_history.json'), 'w') as f:
             json.dump(self.download_history, f)
 
     def open_history_window(self):

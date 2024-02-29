@@ -269,10 +269,10 @@ class CloseableTabWidget(QTabWidget):
 class BrowserWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("My Web Browser")
+        self.setWindowTitle("Pytser")
         self.setGeometry(100, 100, 800, 600)
         self.setStyleSheet("background-color: #222; color: #eee;")
-        self.setWindowIcon(QIcon('icon.png'))
+        self.setWindowIcon(QIcon('icon.ico'))
         self.main_widget = QWidget()
         self.setCentralWidget(self.main_widget)
         self.main_layout = QVBoxLayout(self.main_widget)

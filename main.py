@@ -3,6 +3,8 @@ import os
 from urllib.parse import urlparse
 import subprocess
 import warnings
+import requests
+from dotenv import load_dotenv
 
 from PyQt5.QtCore import QUrl, pyqtSignal, Qt
 from PyQt5.QtGui import QCursor, QFont, QIcon
@@ -210,6 +212,32 @@ class CloseableTabWidget(QTabWidget):
 
         self.setStyleSheet("QTabBar::tab { color: black; }")
 
+        if not url:
+            def get_random_nature_image():
+                load_dotenv()
+                access_key = os.getenv("UNSPLASH_ACCESS_KEY")
+                response = requests.get(f"https://api.unsplash.com/photos/random?query=nature&client_id={access_key}")
+                data = response.json()
+                image_url = data['urls']['full']
+                return image_url
+
+            html = (f"""
+            <html>
+            <head>
+            <title>Untitled</title>
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+            </head>
+            <body style='background: #333; color: #eee;'>
+            <img src='{get_random_nature_image()}' style='height: 100%; width: 100%;' alt='Image could not be loaded.'>
+            <h1 style='font-weight: 200; -webkit-text-stroke: 0.5px black; color: white; text-shadow: 3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; font-family: Roboto; position: absolute; top: 5%; left: 5%; transform: translate(-5%, -5%);'>Welcome to Pytser <br> Use the url bar to search </h1>
+            </body>
+            </html>
+            """)
+
+            web_engine_page.setHtml(html)
+
     def show_hamburger_menu(self):
         hamburger_menu = QMenu(self)
 
@@ -228,11 +256,14 @@ class CloseableTabWidget(QTabWidget):
 
     def handle_url_change(self, url, url_bar):
         url_string = url.toString()
-        if not self.browser_window.history or self.browser_window.history[-1] != url_string:
-            self.browser_window.history.append(url_string)
-            self.browser_window.save_history()
-        url_bar.setText(url_string)
-        url_bar.setCursorPosition(0)
+        if url_string.startswith("data:text/html"):
+            url_bar.clear()
+        else:
+            if not self.browser_window.history or self.browser_window.history[-1] != url_string:
+                self.browser_window.history.append(url_string)
+                self.browser_window.save_history()
+            url_bar.setText(url_string)
+            url_bar.setCursorPosition(0)
         self.user_made_change = False
 
     def handle_search(self, url_bar, web_engine_page):

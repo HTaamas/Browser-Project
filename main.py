@@ -1,14 +1,14 @@
+import http.client
 import json
 import os
 from urllib.parse import urlparse
 import subprocess
 import warnings
-import requests
 from dotenv import load_dotenv
 
 from PyQt5.QtCore import QUrl, pyqtSignal, Qt
 from PyQt5.QtGui import QCursor, QFont, QIcon
-from PyQt5.QtWebEngineWidgets import QWebEngineProfile
+from PyQt5.QtWebEngineWidgets import QWebEngineProfile, QWebEngineSettings
 from PyQt5.QtWidgets import QFileDialog, QMenu, QAction, QTabBar, QListWidget, QLabel, QMessageBox
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
 from PyQt5.QtWidgets import (
@@ -65,7 +65,10 @@ class DownloadHistoryListWidget(QListWidget):
             elif action == open_file_action:
                 item_text = item_text[2:] if item_text.startswith('X ') else item_text
                 if os.path.exists(item_text):
-                    os.startfile(item_text)
+                    try:
+                        os.startfile(item_text)
+                    except Exception as e:
+                        print(f"Error opening file: {e}")
 
 class DownloadHistoryWindow(QMainWindow):
     def __init__(self, download_history, browser_window):
@@ -221,6 +224,7 @@ class CloseableTabWidget(QTabWidget):
                 image_url = data['urls']['full']
                 return image_url
 
+
             html = (f"""
             <html>
             <head>
@@ -271,7 +275,7 @@ class CloseableTabWidget(QTabWidget):
         if text:
             self.user_made_change = True
             formatted_url = QUrl.fromUserInput(text)
-            if formatted_url.isValid() and "." in text:
+            if formatted_url.isValid() and "." or ":" in text:
                 web_engine_page.load(formatted_url)
             else:
                 search_query = text.strip()

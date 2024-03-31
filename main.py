@@ -218,9 +218,11 @@ class CloseableTabWidget(QTabWidget):
         if not url:
             def get_random_nature_image():
                 load_dotenv()
-                access_key = os.getenv("UNSPLASH_ACCESS_KEY")
-                response = requests.get(f"https://api.unsplash.com/photos/random?query=nature&client_id={access_key}")
-                data = response.json()
+                api_key = os.getenv("UNSPLASH_ACCESS_KEY")
+                conn = http.client.HTTPSConnection("api.unsplash.com")
+                conn.request("GET", f"/photos/random?query=nature&client_id={api_key}")
+                res = conn.getresponse()
+                data = json.loads(res.read().decode())
                 image_url = data['urls']['full']
                 return image_url
 
@@ -275,7 +277,9 @@ class CloseableTabWidget(QTabWidget):
         if text:
             self.user_made_change = True
             formatted_url = QUrl.fromUserInput(text)
-            if formatted_url.isValid() and "." or ":" in text:
+            if formatted_url.isValid() and "." in text:
+                web_engine_page.load(formatted_url)
+            elif formatted_url.isValid() and ":" in text:
                 web_engine_page.load(formatted_url)
             else:
                 search_query = text.strip()
@@ -287,7 +291,7 @@ class BrowserWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Pytser")
-        self.setGeometry(100, 100, 800, 600)
+        self.setGeometry(100, 100, 1280, 720)
         self.setStyleSheet("background-color: #222; color: #eee;")
         self.setWindowIcon(QIcon('icon.ico'))
         self.main_widget = QWidget()

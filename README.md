@@ -1,0 +1,1 @@
+# To develop copy the .env.example and rename it to .env then put your unsplashed client id in there

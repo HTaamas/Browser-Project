@@ -174,7 +174,7 @@ class CloseableTabWidget(QTabWidget):
 
         self.hamburger_button = QPushButton("☰")
         self.hamburger_button.setStyleSheet("background-color: #333; color: #eee; width: 24px; height: 24px;")
-        self.hamburger_button.setContentsMargins(0, 0, 0, 0)
+        self.hamburger_button.setContentsMargins(0, 10, 0, 0)
         self.hamburger_button.clicked.connect(self.show_hamburger_menu)
         self.setCornerWidget(self.hamburger_button)
 
@@ -186,9 +186,8 @@ class CloseableTabWidget(QTabWidget):
 
         web_engine_view = QWebEngineView()
         web_engine_page = QWebEnginePage()
-        web_engine_view.setPage(web_engine_page)
-        layout.addWidget(web_engine_view)
 
+        # Search bar and plus button
         url_bar = QLineEdit()
         plus_button = QPushButton("+")
         url_bar.setStyleSheet("color: white;")
@@ -198,10 +197,13 @@ class CloseableTabWidget(QTabWidget):
         url_layout = QHBoxLayout()
         url_layout.addWidget(url_bar)
         url_layout.addWidget(plus_button)
+        layout.addLayout(url_layout)
+
+        # Creating web view
+        web_engine_view.setPage(web_engine_page)
+        layout.addWidget(web_engine_view)
 
         web_engine_page.urlChanged.connect(lambda url: self.handle_url_change(url, url_bar))
-
-        layout.addLayout(url_layout)
 
         self.addTab(tab, "Untitled")
         self.setCurrentWidget(tab)

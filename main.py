@@ -221,12 +221,15 @@ class CloseableTabWidget(QTabWidget):
             def get_random_nature_image():
                 load_dotenv()
                 api_key = os.getenv("UNSPLASH_ACCESS_KEY")
-                conn = http.client.HTTPSConnection("api.unsplash.com")
-                conn.request("GET", f"/photos/random?query=nature&client_id={api_key}")
-                res = conn.getresponse()
-                data = json.loads(res.read().decode())
-                image_url = data['urls']['full']
-                return image_url
+                try:
+                    conn = http.client.HTTPSConnection("api.unsplash.com")
+                    conn.request("GET", f"/photos/random?query=nature&client_id={api_key}")
+                    res = conn.getresponse()
+                    data = json.loads(res.read().decode())
+                    image_url = data['urls']['full']
+                    return image_url
+                except Exception as e:
+                    return f"Error getting image: {e} ( No internet (possibly) )"
 
 
             html = (f"""
